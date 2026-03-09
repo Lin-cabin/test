@@ -1,0 +1,13 @@
+# 敏感文件
+.env
+*.key
+id_rsa
+# 依赖/缓存文件
+node_modules/
+__pycache__/
+venv/
+# 系统/编辑器文件
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

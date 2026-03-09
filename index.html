@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dragon Pet</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <audio id="bgm" src="./bgm.MP3" loop></audio>
+    <div class="phone">
+      <video class="bg-video-full" src="./bga.mp4" autoplay loop muted playsinline></video>
+      <div class="status-bar"></div>
+      <header class="app-bar">
+        <div class="app-info">
+          <div class="app-avatar"></div>
+          <div class="app-title">My Dragon Pet</div>
+        </div>
+      </header>
+      <main class="screen">
+        <div class="bg-orb left"></div>
+        <div class="bg-orb right"></div>
+        <section class="settings-blueprint" aria-hidden="true">
+          <div class="sb-back" data-skin="back-icon">‹</div>
+
+          <div class="sb-currencies">
+            <div class="sb-pill coin-pill" data-skin="coin-pill"><span class="pill-icon coin" data-skin="coin-icon"></span><span class="pill-value">3200</span><span class="pill-plus">+</span></div>
+            <div class="sb-pill gem-pill" data-skin="gem-pill"><span class="pill-icon gem" data-skin="gem-icon"></span><span class="pill-value">10</span><span class="pill-plus">+</span></div>
+          </div>
+
+          <div class="sb-banner" data-skin="title-banner">DRAGON PET</div>
+          <div class="sb-stars" aria-label="宠物星级">
+            <span class="star full"></span>
+            <span class="star full"></span>
+            <span class="star full"></span>
+            <span class="star full"></span>
+            <span class="star empty"></span>
+          </div>
+
+          <div class="sb-left-menu">
+            <div class="sb-menu-item menu-story"><span class="menu-icon" data-skin="menu-story"></span><span class="menu-label">Story</span></div>
+            <div class="sb-menu-item menu-achieve"><span class="menu-icon" data-skin="menu-achieve"></span><span class="menu-label">Achieve</span></div>
+            <div class="sb-menu-item menu-record"><span class="menu-icon" data-skin="menu-record"></span><span class="menu-label">Record</span></div>
+          </div>
+
+          <div class="sb-stat-card" data-skin="stat-card">
+            <div class="stat-row"><span class="stat-icon life" data-skin="stat-life"></span><span class="stat-name">Life</span><span class="stat-val">72</span></div>
+            <div class="stat-row"><span class="stat-icon magic" data-skin="stat-magic"></span><span class="stat-name">Magic</span><span class="stat-val">31</span></div>
+          </div>
+
+          <div class="sb-level">Level 17</div>
+          <div class="sb-exp-wrap">
+            <span class="exp-gem"></span>
+            <div class="sb-exp-bar"><span class="sb-exp-fill"></span><span class="sb-exp-text">8/10</span></div>
+          </div>
+
+          <div class="sb-bottom-strip" aria-label="换套装">
+            <button class="avatar-slot outfit-base active" type="button" data-outfit="base" aria-pressed="true"><span class="av-thumb" data-skin="outfit-base"></span><span class="av-name active">BASE</span></button>
+            <button class="avatar-slot outfit-festive" type="button" data-outfit="festive" aria-pressed="false"><span class="av-thumb" data-skin="outfit-festive"></span><span class="av-name">FESTIVE</span></button>
+            <button class="avatar-slot outfit-armor" type="button" data-outfit="armor" aria-pressed="false"><span class="av-thumb" data-skin="outfit-armor"></span><span class="av-name">ARMOR</span></button>
+            <button class="avatar-slot outfit-skint" type="button" data-outfit="skint" aria-pressed="false"><span class="av-thumb" data-skin="outfit-skint"></span><span class="av-name">SKINT</span></button>
+            <button class="avatar-slot outfit-terhor" type="button" data-outfit="terhor" aria-pressed="false"><span class="av-thumb" data-skin="outfit-terhor"></span><span class="av-name">TERHOR</span></button>
+          </div>
+        </section>
+        <div class="character-area" data-state="idle">
+          <div class="speech-bubble" aria-live="polite"></div>
+          <div class="character-wrapper">
+            <img class="character-img" src="./character.png.png" alt="龙宠角色形象" style="display:none;" />
+            <video class="character-video" id="video-idle" src="./wait.webm" muted playsinline preload="auto" loop style="display:none;"></video>
+            <video class="character-video" id="video-feed" src="./feed_noaudio.webm" muted playsinline preload="auto" style="display:none;"></video>
+            <video class="character-video" id="video-play" src="./play_noaudio.webm" muted playsinline preload="auto" style="display:none;"></video>
+            <video class="character-video" id="video-outfit" src="./changeO.webm" muted playsinline preload="auto" style="display:none;"></video>
+            <video class="character-video" id="video-odaiji" src="./Odaiji.webm" muted playsinline preload="auto" loop style="display:none;"></video>
+          </div>
+        </div>
+        <section class="profile-panel" aria-hidden="true">
+          <img class="profile-image" src="./Profile.png" alt="Profile 档案" />
+        </section>
+        <div class="sticky-note" aria-label="首页提醒">
+          <div class="sticky-note-header">
+            <span class="sticky-header-dot" aria-hidden="true"></span>
+            <span class="sticky-header-title">今日提醒</span>
+            <span class="sticky-header-date">Today</span>
+          </div>
+          <div class="sticky-note-list">
+            <div class="sticky-note-item event">
+              <span class="sticky-time">10:00</span>
+              <span class="sticky-meta">
+                <span class="sticky-item-title">限时活动</span>
+                <span class="sticky-text">今天10点有活动哦</span>
+              </span>
+            </div>
+            <div class="sticky-note-item login">
+              <span class="sticky-time">15:00</span>
+              <span class="sticky-meta">
+                <span class="sticky-item-title">登录提醒</span>
+                <span class="sticky-text">记得进入游戏，下午三点。</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="action-rail">
+          <button class="action-card" type="button" data-action="feed"><div class="action-icon bowl"></div><div class="action-text">Feed</div></button>
+          <button class="action-card" type="button" data-action="play"><div class="action-icon play"></div><div class="action-text">Play</div></button>
+          <button class="action-card" type="button" data-action="outfit"><div class="action-icon outfit"></div><div class="action-text">Change outfit</div></button>
+        </div>
+        <section class="interaction-panel" aria-live="polite">
+          <div class="panel-header"><button class="panel-close" type="button">×</button></div>
+          <div class="chat-messages"><div class="chat-message pet">哼，小家伙，你终于来了。先过来让我盯一眼，再决定准你做什么。</div></div>
+          <div class="chat-input-row"><input class="chat-input" type="text" placeholder="输入一句话…" /><button class="chat-send" type="button">发送</button></div>
+        </section>
+      </main>
+      <nav class="bottom-nav">
+        <button class="nav-item" type="button" data-tab="home"><span class="nav-icon home"></span><span>Home</span></button>
+        <button class="nav-item" type="button" data-tab="interact"><span class="nav-icon interact"></span><span>Interact</span></button>
+        <button class="nav-item" type="button" data-tab="settings"><span class="nav-icon settings"></span><span>Settings</span></button>
+        <button class="nav-item active" type="button" data-tab="profile"><span class="nav-icon profile"></span><span>Profile</span></button>
+      </nav>
+      <button class="bgm-toggle" type="button" aria-label="Toggle BGM"><span class="bgm-icon">♫</span></button>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
