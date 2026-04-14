@@ -5,6 +5,7 @@ import mimetypes
 import json
 import urllib.request
 import urllib.error
+import urllib.parse
 import datetime
 import re
 
@@ -246,6 +247,16 @@ mimetypes.add_type('video/quicktime', '.mov')
 class RangeHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     """支持 Range request 的静态文件服务器，解决视频无法 seek 的问题"""
 
+    def _build_chat_completions_url(self, url):
+        raw = str(url or '').strip()
+        if not raw:
+            return 'https://api.deepseek.com/chat/completions'
+        if raw.endswith('/chat/completions'):
+            return raw
+        if raw.endswith('/v1'):
+            return raw + '/chat/completions'
+        return raw.rstrip('/') + '/chat/completions'
+
     def _send_json(self, status_code, payload):
         raw = json.dumps(payload, ensure_ascii=False).encode('utf-8')
         self.send_response(status_code)
@@ -270,7 +281,248 @@ class RangeHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_POST(self):
-        if self.path != '/api/chat':
+        parsed_path = urllib.parse.urlparse(self.path).path.rstrip('/')
+        
+        if parsed_path == '/api/llm-proxy':
+            try:
+                content_length = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+                data = json.loads(body.decode('utf-8'))
+            except Exception:
+                self._send_json(400, {'error': '请求体不是合法 JSON'})
+                return
+
+            provider = str(data.get('provider', '')).strip()
+            api_key = str(data.get('apiKey', '')).strip()
+            endpoint = str(data.get('endpoint', '')).strip()
+            model = str(data.get('model', '')).strip() or 'deepseek-chat'
+            prompt = str(data.get('prompt', '')).strip()
+
+            if provider != 'deepseek':
+                self._send_json(400, {'error': '当前代理仅支持 DeepSeek'})
+                return
+
+            if not api_key:
+                self._send_json(400, {'error': '缺少 API Key'})
+                return
+
+            if not prompt:
+                self._send_json(400, {'error': '缺少 prompt'})
+                return
+
+            payload = {
+                'model': model,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'stream': False,
+            }
+
+            req = urllib.request.Request(
+                self._build_chat_completions_url(endpoint),
+                data=json.dumps(payload).encode('utf-8'),
+                headers={
+                    'Content-Type': 'application/json',
+                    'Authorization': f'Bearer {api_key}',
+                },
+                method='POST'
+            )
+
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    raw = resp.read().decode('utf-8')
+                model_data = json.loads(raw)
+                content = str(model_data.get('choices', [{}])[0].get('message', {}).get('content', '')).strip()
+                if not content:
+                    self._send_json(502, {'error': 'DeepSeek 返回内容为空'})
+                    return
+                self._send_json(200, {'content': content, 'raw': model_data})
+                return
+            except urllib.error.HTTPError as e:
+                err_text = e.read().decode('utf-8', errors='ignore') if hasattr(e, 'read') else str(e)
+                self._send_json(502, {'error': f'DeepSeek 接口返回错误：{err_text[:500]}'})
+                return
+            except Exception as e:
+                self._send_json(502, {'error': f'代理请求失败：{str(e)}'})
+                return
+
+        if parsed_path == '/api/video-proxy':
+            try:
+                content_length = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(content_length) if content_length > 0 else b'{}'
+                data = json.loads(body.decode('utf-8'))
+            except Exception:
+                self._send_json(400, {'error': '请求体不是合法 JSON'})
+                return
+
+            provider = str(data.get('provider', '')).strip()
+            if provider != 'ark':
+                self._send_json(400, {'error': '当前代理仅支持火山方舟视频任务接口'})
+                return
+
+            api_key = str(data.get('apiKey', '')).strip()
+            if not api_key:
+                self._send_json(400, {'error': '缺少 ARK API Key'})
+                return
+
+            action = str(data.get('action', 'create')).strip()
+            endpoint = str(data.get('endpoint', 'https://ark.cn-beijing.volces.com/api/v3/contents/generations/tasks')).strip()
+            if not endpoint:
+                endpoint = 'https://ark.cn-beijing.volces.com/api/v3/contents/generations/tasks'
+            # 规范化 endpoint
+            if endpoint.endswith('/api/v3'):
+                endpoint += '/contents/generations/tasks'
+            elif '/contents/generations/tasks' not in endpoint:
+                endpoint = endpoint.rstrip('/') + '/api/v3/contents/generations/tasks'
+            else:
+                endpoint = endpoint.rstrip('/')
+
+            if action == 'create':
+                prompt = str(data.get('prompt', '')).strip()
+                image_url = str(data.get('imageUrl', data.get('referenceImageUrl', ''))).strip()
+                
+                content = []
+                if prompt:
+                    content.append({'type': 'text', 'text': prompt})
+                if image_url:
+                    content.append({
+                        'type': 'image_url',
+                        'image_url': {'url': image_url}
+                    })
+
+                if not content:
+                    self._send_json(400, {'error': '至少需要提供提示词或首帧图片'})
+                    return
+
+                def parse_bool(val, default=False):
+                    if isinstance(val, bool): return val
+                    if isinstance(val, str):
+                        return val.lower() in ('true', '1', 'yes', 'on')
+                    return default
+
+                def parse_int(val, default=5):
+                    try:
+                        return int(val)
+                    except:
+                        return default
+
+                payload = {
+                    'model': str(data.get('model', '')).strip() or 'doubao-seedance-1-5-pro-251215',
+                    'content': content,
+                    'duration': parse_int(data.get('duration'), 5),
+                    'generate_audio': parse_bool(data.get('generateAudio'), True),
+                    'watermark': parse_bool(data.get('watermark'), False),
+                    'return_last_frame': parse_bool(data.get('returnLastFrame'), False),
+                }
+                if 'draft' in data: payload['draft'] = parse_bool(data['draft'])
+                
+                # 火山方舟图生视频不支持自定义比例和部分参数，文生视频才需要传
+                if not image_url:
+                    resolution = str(data.get('resolution', '')).strip()
+                    if resolution:
+                        payload['resolution'] = resolution
+                    ratio = str(data.get('ratio', '')).strip()
+                    if ratio and ratio != 'adaptive':
+                        payload['ratio'] = ratio
+                    if 'cameraFixed' in data:
+                        payload['camera_fixed'] = parse_bool(data['cameraFixed'])
+                
+                req = urllib.request.Request(
+                    endpoint,
+                    data=json.dumps(payload).encode('utf-8'),
+                    headers={
+                        'Content-Type': 'application/json',
+                        'Authorization': f'Bearer {api_key}',
+                    },
+                    method='POST'
+                )
+
+                try:
+                    with urllib.request.urlopen(req, timeout=60) as resp:
+                        raw = resp.read().decode('utf-8')
+                    model_data = json.loads(raw)
+                    resp_data = model_data.get('data', model_data)
+                    task_id = str(resp_data.get('id', '')).strip()
+                    if not task_id:
+                        self._send_json(502, {'error': '创建任务成功，但未返回任务 ID', 'raw': model_data})
+                        return
+                    self._send_json(200, {'taskId': task_id, 'raw': model_data})
+                    return
+                except urllib.error.HTTPError as e:
+                    err_text = e.read().decode('utf-8', errors='ignore') if hasattr(e, 'read') else str(e)
+                    print(f"\n[火山方舟 API 错误] {err_text}\n")
+                    try:
+                        err_data = json.loads(err_text)
+                        err_msg = err_data.get('error', {}).get('message', err_text)
+                        err_code = err_data.get('error', {}).get('code', '')
+                        if err_code == 'InputTextSensitiveContentDetected':
+                            err_msg = f"输入文本包含敏感内容，请修改文案 ({err_msg})"
+                    except Exception:
+                        err_msg = err_text
+                    self._send_json(e.code, {'error': f'火山方舟创建任务失败：{err_msg}'})
+                    return
+                except Exception as e:
+                    print(f"\n[代理请求失败] {str(e)}\n")
+                    self._send_json(502, {'error': f'代理请求失败：{str(e)}'})
+                    return
+
+            elif action == 'status':
+                task_id = str(data.get('taskId', '')).strip()
+                if not task_id:
+                    self._send_json(400, {'error': '缺少 taskId'})
+                    return
+
+                status_url = f"{endpoint}/{urllib.parse.quote(task_id)}"
+                
+                req = urllib.request.Request(
+                    status_url,
+                    headers={'Authorization': f'Bearer {api_key}'},
+                    method='GET'
+                )
+
+                try:
+                    with urllib.request.urlopen(req, timeout=60) as resp:
+                        raw = resp.read().decode('utf-8')
+                    model_data = json.loads(raw)
+                    resp_data = model_data.get('data', model_data)
+                    
+                    def find_urls(obj, acc):
+                        if isinstance(obj, str):
+                            if obj.startswith('http') and ('.mp4' in obj or '.webm' in obj or '.mov' in obj):
+                                acc.append(obj)
+                        elif isinstance(obj, list):
+                            for i in obj: find_urls(i, acc)
+                        elif isinstance(obj, dict):
+                            for k, v in obj.items():
+                                if isinstance(v, str):
+                                    if v.startswith('http') and ('video' in k.lower() or '.mp4' in v or '.webm' in v or '.mov' in v):
+                                        acc.append(v)
+                                else:
+                                    find_urls(v, acc)
+                        return acc
+                    
+                    urls = find_urls(resp_data, [])
+                    
+                    res_payload = {
+                        'taskId': str(resp_data.get('id', resp_data.get('task_id', ''))).strip(),
+                        'status': str(resp_data.get('status', resp_data.get('task_status', resp_data.get('state', '')))).strip(),
+                        'videoUrl': urls[0] if urls else '',
+                        'raw': model_data
+                    }
+                    self._send_json(200, res_payload)
+                    return
+                except urllib.error.HTTPError as e:
+                    err_text = e.read().decode('utf-8', errors='ignore') if hasattr(e, 'read') else str(e)
+                    print(f"\n[火山方舟 API 查询错误] {err_text}\n")
+                    self._send_json(e.code, {'error': f'火山方舟查询任务失败：{err_text}'})
+                    return
+                except Exception as e:
+                    print(f"\n[代理查询失败] {str(e)}\n")
+                    self._send_json(502, {'error': f'代理请求失败：{str(e)}'})
+                    return
+            else:
+                self._send_json(400, {'error': f'不支持的 action：{action}'})
+                return
+
+        if parsed_path != '/api/chat':
             self._send_json(404, {'error': 'Not found'})
             return
 
@@ -336,10 +588,7 @@ class RangeHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             {'role': 'user', 'content': message}
         ]
 
-        # 确保 URL 包含 /chat/completions 路径
-        api_url = DEEPSEEK_API_URL
-        if not api_url.endswith('/chat/completions'):
-            api_url = api_url.rstrip('/') + '/chat/completions'
+        api_url = self._build_chat_completions_url(DEEPSEEK_API_URL)
 
         payload = {
             'model': DEEPSEEK_MODEL,
@@ -375,6 +624,15 @@ class RangeHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self._send_json(502, {'error': f'DeepSeek 请求失败: {str(e)}'})
 
     def do_GET(self):
+        if self.path == '/api/health':
+            self._send_json(200, {
+                'ok': True,
+                'service': 'dragon-pet-api',
+                'hasDeepseekKey': bool(DEEPSEEK_API_KEY),
+                'timestamp': datetime.datetime.now().isoformat()
+            })
+            return
+
         path = self.translate_path(self.path)
         if not os.path.isfile(path):
             super().do_GET()

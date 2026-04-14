@@ -1,123 +1,463 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Dragon Pet</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <audio id="bgm" src="./bgm.MP3" loop></audio>
-    <div class="phone">
-      <video class="bg-video-full" src="./bga.mp4" autoplay loop muted playsinline></video>
-      <div class="status-bar"></div>
-      <header class="app-bar">
-        <div class="app-info">
-          <div class="app-avatar"></div>
-          <div class="app-title">My Dragon Pet</div>
-        </div>
-      </header>
-      <main class="screen">
-        <div class="bg-orb left"></div>
-        <div class="bg-orb right"></div>
-        <section class="settings-blueprint" aria-hidden="true">
-          <div class="sb-back" data-skin="back-icon">‹</div>
-
-          <div class="sb-currencies">
-            <div class="sb-pill coin-pill" data-skin="coin-pill"><span class="pill-icon coin" data-skin="coin-icon"></span><span class="pill-value">3200</span><span class="pill-plus">+</span></div>
-            <div class="sb-pill gem-pill" data-skin="gem-pill"><span class="pill-icon gem" data-skin="gem-icon"></span><span class="pill-value">10</span><span class="pill-plus">+</span></div>
-          </div>
-
-          <div class="sb-banner" data-skin="title-banner">DRAGON PET</div>
-          <div class="sb-stars" aria-label="宠物星级">
-            <span class="star full"></span>
-            <span class="star full"></span>
-            <span class="star full"></span>
-            <span class="star full"></span>
-            <span class="star empty"></span>
-          </div>
-
-          <div class="sb-left-menu">
-            <div class="sb-menu-item menu-story"><span class="menu-icon" data-skin="menu-story"></span><span class="menu-label">Story</span></div>
-            <div class="sb-menu-item menu-achieve"><span class="menu-icon" data-skin="menu-achieve"></span><span class="menu-label">Achieve</span></div>
-            <div class="sb-menu-item menu-record"><span class="menu-icon" data-skin="menu-record"></span><span class="menu-label">Record</span></div>
-          </div>
-
-          <div class="sb-stat-card" data-skin="stat-card">
-            <div class="stat-row"><span class="stat-icon life" data-skin="stat-life"></span><span class="stat-name">Life</span><span class="stat-val">72</span></div>
-            <div class="stat-row"><span class="stat-icon magic" data-skin="stat-magic"></span><span class="stat-name">Magic</span><span class="stat-val">31</span></div>
-          </div>
-
-          <div class="sb-level">Level 17</div>
-          <div class="sb-exp-wrap">
-            <span class="exp-gem"></span>
-            <div class="sb-exp-bar"><span class="sb-exp-fill"></span><span class="sb-exp-text">8/10</span></div>
-          </div>
-
-          <div class="sb-bottom-strip" aria-label="换套装">
-            <button class="avatar-slot outfit-base active" type="button" data-outfit="base" aria-pressed="true"><span class="av-thumb" data-skin="outfit-base"></span><span class="av-name active">BASE</span></button>
-            <button class="avatar-slot outfit-festive" type="button" data-outfit="festive" aria-pressed="false"><span class="av-thumb" data-skin="outfit-festive"></span><span class="av-name">FESTIVE</span></button>
-            <button class="avatar-slot outfit-armor" type="button" data-outfit="armor" aria-pressed="false"><span class="av-thumb" data-skin="outfit-armor"></span><span class="av-name">ARMOR</span></button>
-            <button class="avatar-slot outfit-skint" type="button" data-outfit="skint" aria-pressed="false"><span class="av-thumb" data-skin="outfit-skint"></span><span class="av-name">SKINT</span></button>
-            <button class="avatar-slot outfit-terhor" type="button" data-outfit="terhor" aria-pressed="false"><span class="av-thumb" data-skin="outfit-terhor"></span><span class="av-name">TERHOR</span></button>
-          </div>
-        </section>
-        <div class="character-area" data-state="idle">
-          <div class="speech-bubble" aria-live="polite"></div>
-          <div class="character-wrapper">
-            <img class="character-img" src="./character.png.png" alt="龙宠角色形象" style="display:none;" />
-            <video class="character-video" id="video-idle" src="./wait.webm" muted playsinline preload="auto" loop style="display:none;"></video>
-            <video class="character-video" id="video-feed" src="./feed_noaudio.webm" muted playsinline preload="auto" style="display:none;"></video>
-            <video class="character-video" id="video-play" src="./play_noaudio.webm" muted playsinline preload="auto" style="display:none;"></video>
-            <video class="character-video" id="video-outfit" src="./changeO.webm" muted playsinline preload="auto" style="display:none;"></video>
-            <video class="character-video" id="video-odaiji" src="./Odaiji.webm" muted playsinline preload="auto" loop style="display:none;"></video>
-          </div>
-        </div>
-        <section class="profile-panel" aria-hidden="true">
-          <img class="profile-image" src="./Profile.png" alt="Profile 档案" />
-        </section>
-        <div class="sticky-note" aria-label="首页提醒">
-          <div class="sticky-note-header">
-            <span class="sticky-header-dot" aria-hidden="true"></span>
-            <span class="sticky-header-title">今日提醒</span>
-            <span class="sticky-header-date">Today</span>
-          </div>
-          <div class="sticky-note-list">
-            <div class="sticky-note-item event">
-              <span class="sticky-time">10:00</span>
-              <span class="sticky-meta">
-                <span class="sticky-item-title">限时活动</span>
-                <span class="sticky-text">今天10点有活动哦</span>
-              </span>
+<!DOCTYPE html>
+<html lang="zh-CN" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量买量视频生成器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部：项目配置 -->
+        <header class="header">
+            <h1>🎬 批量买量视频生成器</h1>
+            <div class="header-actions">
+                <button class="btn-outline btn-blue" onclick="exportAllVideos()">📦 导出视频 ZIP</button>
+                <button class="btn-outline btn-gray" onclick="openSettings()">⚙️ 全局配置</button>
             </div>
-            <div class="sticky-note-item login">
-              <span class="sticky-time">15:00</span>
-              <span class="sticky-meta">
-                <span class="sticky-item-title">登录提醒</span>
-                <span class="sticky-text">记得进入游戏，下午三点。</span>
-              </span>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 左侧：文案管理 -->
+            <section class="panel script-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="panel-icon">📝</span>
+                        <h2>文案管理</h2>
+                    </div>
+                    <div class="panel-actions">
+                        <button class="btn-outline btn-blue" onclick="importScripts()">📥 导入信息</button>
+                        <button id="btn-generate-scripts" class="btn-outline btn-purple" onclick="generateAllScripts()">✨ AI 生成文案</button>
+                        <button id="btn-stop-scripts" class="btn-outline btn-red" onclick="stopGeneration()" style="display:none;">⏹️ 停止</button>
+                        <button id="btn-batch-scripts" class="btn-outline btn-gray" onclick="toggleScriptBatchMode()">☑️ 批量操作</button>
+                        <button class="btn-outline btn-red" onclick="clearAllScripts()">🗑️ 清空全部</button>
+                    </div>
+                </div>
+
+                <div class="batch-toolbar" id="script-list-toolbar" style="display: none;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="select-all-scripts" onchange="toggleSelectAllScripts()">
+                        <span>全选</span>
+                    </label>
+                    <div class="batch-actions-right">
+                        <button class="btn-outline btn-blue btn-sm" onclick="batchSetScriptImage()">🖼️ 批量设图</button>
+                        <button class="btn-outline btn-orange btn-sm" onclick="openFrameLibraryModal()">👥 数字人库</button>
+                        <button class="btn-outline btn-purple btn-sm" onclick="openVariantModal()">✨ 生成变体</button>
+                        <button class="btn-outline btn-gray btn-sm" onclick="clearSelectedScriptImages()">🚫 清除首帧图</button>
+                        <button class="btn-outline btn-blue btn-sm" onclick="retrySelectedScripts()">🔄 重新生成</button>
+                        <button class="btn-outline btn-red btn-sm" onclick="deleteSelectedScripts()">🗑️ 批量删除</button>
+                    </div>
+                </div>
+                
+                <div class="script-list" id="script-list">
+                    <!-- 动态生成文案列表 -->
+                </div>
+                
+                <div class="script-pagination" id="script-pagination">
+                    <!-- 动态生成分页 -->
+                </div>
+                
+                <div class="panel-footer" id="script-stats">
+                    <span>总计: <strong id="total-scripts">0</strong> 条</span>
+                    <span>待生成: <strong id="pending-scripts">0</strong> 条</span>
+                    <span>已生成: <strong id="completed-scripts">0</strong> 条</span>
+                </div>
+            </section>
+
+            <!-- 右侧：视频生成 -->
+            <section class="panel video-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <span class="panel-icon">🎬</span>
+                        <h2>视频生成</h2>
+                    </div>
+                    <div class="panel-actions">
+                        <button id="btn-generate-videos" class="btn-outline btn-purple" onclick="generateAllVideos()">🚀 批量生成未完成</button>
+                        <button id="btn-stop-videos" class="btn-outline btn-red" onclick="stopGeneration()" style="display:none;">⏹️ 停止</button>
+                        <button id="btn-batch-videos" class="btn-outline btn-gray" onclick="toggleVideoBatchMode()">☑️ 批量操作</button>
+                        <button class="btn-outline btn-red" onclick="clearAllVideos()">🗑️ 清空全部</button>
+                    </div>
+                </div>
+
+                <!-- 生成说明 -->
+                <div class="video-setup-box">
+                    <div class="setup-label">
+                        <span class="emoji-icon">💡</span>
+                        <span>操作流程:</span>
+                    </div>
+                    <div class="setup-content">
+                        <p>1. 左侧导入产品信息 -> 2. 点击 [AI 生成文案] -> 3. 点击本侧 [🚀 批量生成未完成]</p>
+                    </div>
+                </div>
+                
+                <!-- 批量进度 -->
+                <div class="batch-progress" id="batch-progress">
+                    <div class="progress-info">
+                        <span>当前任务: <strong id="current-task">-</strong></span>
+                        <span>进度: <strong id="progress-text">0/0</strong></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <!-- 视频列表与工具栏 -->
+                <div class="video-toolbar">
+                    <button class="filter-tab active" onclick="setVideoFilter('all')" id="filter-all">全部 (0)</button>
+                    <button class="filter-tab" onclick="setVideoFilter('pending')" id="filter-pending">待生成 (0)</button>
+                    <button class="filter-tab" onclick="setVideoFilter('generating')" id="filter-generating">生成中 (0)</button>
+                    <button class="filter-tab" onclick="setVideoFilter('completed')" id="filter-completed">成功 (0)</button>
+                    <button class="filter-tab" onclick="setVideoFilter('failed')" id="filter-failed">失败 (0)</button>
+                </div>
+                
+                <div class="batch-toolbar" id="video-batch-actions" style="display: none;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="select-all-videos" onchange="toggleSelectAllVideos()">
+                        <span>全选</span>
+                    </label>
+                    <div class="batch-actions-right">
+                        <button class="btn-outline btn-blue btn-sm" onclick="retrySelectedVideos()">🔄 重试选中</button>
+                        <button class="btn-outline btn-red btn-sm" onclick="deleteSelectedVideos()">🗑️ 删除选中</button>
+                    </div>
+                </div>
+                
+                <div class="video-list" id="video-list" style="padding-top: 8px;">
+                    <!-- 动态生成视频列表 -->
+                </div>
+                
+                <div class="video-pagination" id="video-pagination" style="padding: 16px 28px; display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
+                    <!-- 动态生成分页 -->
+                </div>
+                
+                <!-- 单个视频预览 -->
+                <div class="video-preview" id="video-preview" style="display: none;">
+                    <video id="preview-video" controls style="display: none;">
+                        <source src="" type="video/mp4">
+                        您的浏览器不支持视频标签
+                    </video>
+                    <div class="preview-placeholder" id="preview-placeholder">
+                        <p>视频正在生成中，请稍候...</p>
+                    </div>
+                </div>
+                
+                <div class="video-actions" id="video-actions" style="display: none;">
+                    <button onclick="downloadCurrentVideo()" class="btn-outline btn-blue"><span class="icon">⬇️</span> 下载当前视频</button>
+                    <button onclick="regenerateCurrentVideo()" class="btn-outline btn-gray"><span class="icon">🔄</span> 重新生成</button>
+                    <button onclick="editCurrentVideoScript()" class="btn-outline btn-gray"><span class="icon">✏️</span> 修改文案</button>
+                    <button onclick="deleteCurrentVideo()" class="btn-outline btn-red"><span class="icon">🗑️</span> 删除</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- 全局配置弹窗 -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h2>⚙️ 全局配置</h2>
+                    <button class="close-btn" onclick="closeSettings()">&times;</button>
+                </div>
+                
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                    <!-- 文案 API 配置 -->
+                    <div class="config-section">
+                        <h3>📝 文案 API 配置</h3>
+                        <div class="config-item">
+                            <label for="llm-provider">API 提供商:</label>
+                            <select id="llm-provider">
+                                <option value="openai">OpenAI</option>
+                                <option value="deepseek">DeepSeek</option>
+                                <option value="claude">Claude</option>
+                                <option value="custom">自定义</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="llm-api-key">API Key:</label>
+                            <input type="password" id="llm-api-key" placeholder="输入 API Key">
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="llm-api-key-locked" onchange="toggleApiKeyLock('llm')">
+                                <span>锁定当前 Key（防止误修改）</span>
+                            </label>
+                        </div>
+                        <div class="config-item">
+                            <label for="llm-endpoint">Endpoint:</label>
+                            <input type="text" id="llm-endpoint" placeholder="API 端点地址">
+                        </div>
+                        <div class="config-item">
+                            <label for="llm-model">模型:</label>
+                            <input type="text" id="llm-model" placeholder="模型名称，如 gpt-3.5-turbo">
+                        </div>
+                        <div class="config-item">
+                            <label for="llm-profile">📋 产品设定文档:</label>
+                            <textarea id="llm-profile" rows="4" placeholder="上传产品设定文档，如品牌故事、目标用户画像、产品卖点、使用场景等。&#10;这些内容会在生成文案时自动拼接到提示词中。"></textarea>
+                            <div style="display: flex; gap: 8px; margin-top: 8px; align-items: center;">
+                                <button class="btn-secondary btn-sm" onclick="document.getElementById('profile-file-input').click()">📤 上传设定文档</button>
+                                <input type="file" id="profile-file-input" accept=".txt,.md,.csv" style="display:none" onchange="handleProfileFileUpload(event)">
+                                <small class="config-hint" id="profile-file-name"></small>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <label for="llm-prompt">生成提示词模板:</label>
+                            <textarea id="llm-prompt" rows="3" placeholder="用于生成文案的提示词，可用 {product_info} 引用产品信息"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- 视频 API 配置 -->
+                    <div class="config-section">
+                        <h3>🎬 视频 API 配置</h3>
+                        <div class="config-item">
+                            <label for="video-provider">API 提供商:</label>
+                            <select id="video-provider">
+                                <option value="ark">火山方舟 / 即梦 Seedance</option>
+                                <option value="local">本地视频</option>
+                                <option value="custom">自定义 API</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-api-key">API Key:</label>
+                            <input type="password" id="video-api-key" placeholder="视频 API Key">
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="video-api-key-locked" onchange="toggleApiKeyLock('video')">
+                                <span>锁定当前 Key（防止误修改）</span>
+                            </label>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-endpoint">Endpoint:</label>
+                            <input type="text" id="video-endpoint" placeholder="视频生成 API 地址">
+                        </div>
+                        <div class="config-item">
+                            <label for="video-model">模型:</label>
+                            <input type="text" id="video-model" placeholder="如 doubao-seedance-1-5-pro-251215">
+                        </div>
+                        <div class="config-item">
+                            <label for="video-duration">默认视频时长:</label>
+                            <select id="video-duration">
+                                <option value="5">5秒</option>
+                                <option value="10">10秒</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-resolution">分辨率:</label>
+                            <select id="video-resolution">
+                                <option value="480p">480p</option>
+                                <option value="720p">720p</option>
+                                <option value="1080p">1080p</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-ratio">画幅比例:</label>
+                            <select id="video-ratio">
+                                <option value="adaptive">自适应</option>
+                                <option value="16:9">16:9 横屏</option>
+                                <option value="9:16">9:16 竖屏</option>
+                                <option value="1:1">1:1 方形</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-image-url">首帧图片 URL:</label>
+                            <input type="text" id="video-image-url" placeholder="可选；填写后按图生视频方式生成">
+                            <small class="config-hint">留空为文生视频；填写图片链接后将作为首帧图。若文案已配置专属图，则以专属图为准。</small>
+                        </div>
+                        <div class="config-item">
+                            <label>附加选项:</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label class="config-lock-toggle">
+                                    <input type="checkbox" id="video-generate-audio" checked>
+                                    <span>生成音频</span>
+                                </label>
+                                <label class="config-lock-toggle">
+                                    <input type="checkbox" id="video-watermark" checked>
+                                    <span>添加水印</span>
+                                </label>
+                                <label class="config-lock-toggle">
+                                    <input type="checkbox" id="video-camera-fixed">
+                                    <span>固定镜头（仅文生视频生效）</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <label for="video-prompt">视频生成提示词模板:</label>
+                            <textarea id="video-prompt" rows="3" placeholder="用于生成视频画面的提示词，可用 {script} 引用文案"></textarea>
+                            <small class="config-hint">建议保留 {script} 占位符，让每条文案自动拼入视频提示词。</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="justify-content: space-between; display: flex;">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary" onclick="testLlmApi()">🧪 测试文案 API</button>
+                        <button class="btn-secondary" onclick="testVideoApi()">🧪 测试视频 API</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-secondary" onclick="closeSettings()">取消</button>
+                        <button class="btn-primary" onclick="saveSettings()">保存配置</button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="action-rail">
-          <button class="action-card" type="button" data-action="feed"><div class="action-icon bowl"></div><div class="action-text">Feed</div></button>
-          <button class="action-card" type="button" data-action="play"><div class="action-icon play"></div><div class="action-text">Play</div></button>
-          <button class="action-card" type="button" data-action="outfit"><div class="action-icon outfit"></div><div class="action-text">Change outfit</div></button>
+
+        <!-- 导入文案弹窗 -->
+        <div class="modal" id="import-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📥 导入文案</h2>
+                    <button class="close-btn" onclick="closeImportModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="import-options">
+                        <div class="import-option" onclick="importFromText()">
+                            <div class="option-icon">📝</div>
+                            <div class="option-text">
+                                <strong>文本输入</strong>
+                                <small>直接粘贴或输入文案</small>
+                            </div>
+                        </div>
+                        <div class="import-option" onclick="document.getElementById('file-import').click()">
+                            <div class="option-icon">📄</div>
+                            <div class="option-text">
+                                <strong>文件导入</strong>
+                                <small>支持 TXT、CSV 等文本格式</small>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="file-import" accept=".txt,.csv,.xlsx,.xls" style="display:none" onchange="handleFileImport(event)">
+                    
+                    <div id="text-import-area" class="text-import-area" style="display:none;">
+                        <div class="text-import-header">
+                            <strong>粘贴文案内容</strong>
+                            <span>支持每行一条文案，或使用英文逗号分隔</span>
+                        </div>
+                        <textarea
+                            id="import-text"
+                            class="import-textarea"
+                            rows="10"
+                            placeholder="示例：&#10;夏日新品上线，限时折扣中&#10;敏感肌也能用的温和精华&#10;一键解决通勤穿搭烦恼"></textarea>
+                        <div class="text-import-footer">
+                            <span class="import-text-tip">建议一次粘贴多条文案，导入后可继续逐条编辑。</span>
+                            <button class="btn-primary" onclick="processTextImport()">✨ 开始导入</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <section class="interaction-panel" aria-live="polite">
-          <div class="panel-header"><button class="panel-close" type="button">×</button></div>
-          <div class="chat-messages"><div class="chat-message pet">哼，小家伙，你终于来了。先过来让我盯一眼，再决定准你做什么。</div></div>
-          <div class="chat-input-row"><input class="chat-input" type="text" placeholder="输入一句话…" /><button class="chat-send" type="button">发送</button></div>
-        </section>
-      </main>
-      <nav class="bottom-nav">
-        <button class="nav-item" type="button" data-tab="home"><span class="nav-icon home"></span><span>Home</span></button>
-        <button class="nav-item" type="button" data-tab="interact"><span class="nav-icon interact"></span><span>Interact</span></button>
-        <button class="nav-item" type="button" data-tab="settings"><span class="nav-icon settings"></span><span>Settings</span></button>
-        <button class="nav-item active" type="button" data-tab="profile"><span class="nav-icon profile"></span><span>Profile</span></button>
-      </nav>
-      <button class="bgm-toggle" type="button" aria-label="Toggle BGM"><span class="bgm-icon">♫</span></button>
+
+        <!-- 文案变体生成弹窗 -->
+        <div class="modal" id="variant-modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2>✨ 文案变体自动生成</h2>
+                    <button class="close-btn" onclick="closeVariantModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 16px; color: var(--text-muted);">为选中的 <strong id="variant-script-count">0</strong> 条文案生成差异化变体</p>
+                    
+                    <div class="config-item">
+                        <label for="variant-count">每个文案生成变体数量:</label>
+                        <select id="variant-count">
+                            <option value="3">3 个变体</option>
+                            <option value="5" selected>5 个变体</option>
+                            <option value="8">8 个变体</option>
+                            <option value="10">10 个变体</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-item">
+                        <label for="variant-use-llm">生成方式:</label>
+                        <label class="config-lock-toggle">
+                            <input type="checkbox" id="variant-use-llm" checked>
+                            <span>使用 AI 智能生成（更优质）</span>
+                        </label>
+                        <small class="config-hint">关闭后使用规则引擎本地生成，速度更快但变化较少</small>
+                    </div>
+                    
+                    <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                        <h4 style="margin: 0 0 12px;">变体规则（勾选需要的变换方式）</h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="rule-synonym" checked>
+                                <span>🔄 同义词替换（如"免费"→"0元"）</span>
+                            </label>
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="rule-order" checked>
+                                <span>📝 语序调整（如卖点前置/后置）</span>
+                            </label>
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="rule-number" checked>
+                                <span>🔢 数字随机化（如"999元"→"699元"）</span>
+                            </label>
+                            <label class="config-lock-toggle">
+                                <input type="checkbox" id="rule-tone" checked>
+                                <span>💬 语气转换（陈述句↔反问句↔感叹句）</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="config-item" style="margin-top: 16px;">
+                        <label for="variant-template">🎯 自定义模板（可选）:</label>
+                        <textarea id="variant-template" rows="2" placeholder="如：游戏买量风格 - 强调福利、对比、悬念"></textarea>
+                        <small class="config-hint">填写后 AI 会参考此风格生成变体</small>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="justify-content: flex-end;">
+                    <button class="btn-secondary" onclick="closeVariantModal()">取消</button>
+                    <button class="btn-primary" onclick="generateVariants()">✨ 开始生成变体</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数字人库 / 首帧图库管理弹窗 -->
+        <div class="modal" id="frame-library-modal">
+            <div class="modal-content" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h2>🖼️ 数字人库 / 首帧图库</h2>
+                    <button class="close-btn" onclick="closeFrameLibraryModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="frame-library-upload">
+                        <button class="btn-primary" onclick="document.getElementById('frame-library-upload-input').click()">📤 上传首帧图</button>
+                        <input type="file" id="frame-library-upload-input" accept="image/*" multiple style="display:none" onchange="uploadFrameImage(event)">
+                        <small class="config-hint">支持上传多张图片，建议尺寸 9:16 或 1:1</small>
+                    </div>
+                    
+                    <div class="frame-library-list" id="frame-library-list" style="max-height: 400px; overflow-y: auto; margin-top: 16px;">
+                        <!-- 动态生成图库列表 -->
+                    </div>
+                    
+                    <div class="frame-library-distribute" style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                        <h4 style="margin: 0 0 12px;">批量分配到选中文案</h4>
+                        
+                        <div class="config-item">
+                            <label for="frame-distribute-mode">分配方式:</label>
+                            <select id="frame-distribute-mode">
+                                <option value="random">🔀 随机分配（每个文案随机选取一张）</option>
+                                <option value="equal">🔄 平均分配（轮流使用不同图片）</option>
+                                <option value="ratio">📊 按比例分配（需设置每张图片权重）</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-top: 12px;">
+                            <button class="btn-primary" onclick="applyFrameToSelected()">✅ 应用到选中文案</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="justify-content: flex-end;">
+                    <button class="btn-secondary" onclick="closeFrameLibraryModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loading-overlay" id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p id="loading-text">处理中...</p>
+        </div>
     </div>
-    <script src="./app.js"></script>
-  </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>
